@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AskAnything - by Fontecilla</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Poppins:wght@300&family=Rubik:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>AskAnything</h1>
+  </header>
+  <main>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Enter your question...">
+      <button id="search-button">Search</button>
+    </div>
+    <div id="results-container">
+    
+    </div>
+  </main>
+  <script>
+    const searchButton = document.getElementById('search-button');
+    const searchInput = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('results-container');
+
+    searchButton.addEventListener('click', () => {
+      const query = searchInput.value;
+
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+
+      fetch(`https://www.googleapis.com/customsearch/v1?key=AIzaSyB7DajF78gLwTLw69W7awBaBBEXvSK_MtY&cx=97db1434d3f5d4704&q=${query}`, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          // Display the response on the webpage
+          resultsContainer.innerHTML = 'Search Results';
+          
+          if (result && result.items && result.items.length > 0) {
+            result.items.forEach(item => {
+              var resultItem = document.createElement('div');
+              resultItem.classList.add('result-item');
+              resultItem.innerHTML = `
+                <div class="results">
+                
+                  <div class="result-content">
+                    <a href="${item.link}" target="_blank">
+                    <img src="https://www.google.com/s2/favicons?sz=32&domain=${encodeURIComponent(item.link)}" alt="Website Favicon" class="favicon">
+                  </a>
+                    <h3>${item.title}</h3>
+                    <p>${item.snippet}</p>
+                    <a href="${item.link}" target="_blank">Read More</a>
+                  </div>
+                </div>
+              `;
+              resultsContainer.appendChild(resultItem);
+            });
+          } else {
+            resultsContainer.innerHTML = 'No results found.';
+          }
+        })
+        .catch(error => console.log('error', error));
+    });
+  </script>
+</body>
+</html>
