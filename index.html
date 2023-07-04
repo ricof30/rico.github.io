@@ -25,7 +25,7 @@
     const searchInput = document.getElementById('search-input');
     const resultsContainer = document.getElementById('results-container');
 
-    searchButton.addEventListener('click', () => {
+    searchInput.addEventListener('input', () => {
       const query = searchInput.value;
 
       var myHeaders = new Headers();
@@ -37,23 +37,22 @@
         redirect: 'follow'
       };
 
-      fetch(`https://www.googleapis.com/customsearch/v1?key=AIzaSyB7DajF78gLwTLw69W7awBaBBEXvSK_MtY&cx=97db1434d3f5d4704&q=${query}`, requestOptions)
+      fetch(`https://www.googleapis.com/customsearch/v1?key=YOUR_API_KEY&cx=YOUR_CX&q=${query}`, requestOptions)
         .then(response => response.json())
         .then(result => {
-          // Display the response on the webpage
-          resultsContainer.innerHTML = 'Search Results';
-          
+          // Clear previous results
+          resultsContainer.innerHTML = '';
+
           if (result && result.items && result.items.length > 0) {
             result.items.forEach(item => {
               var resultItem = document.createElement('div');
               resultItem.classList.add('result-item');
               resultItem.innerHTML = `
                 <div class="results">
-                
                   <div class="result-content">
                     <a href="${item.link}" target="_blank">
-                    <img src="https://www.google.com/s2/favicons?sz=32&domain=${encodeURIComponent(item.link)}" alt="Website Favicon" class="favicon">
-                  </a>
+                      <img src="https://www.google.com/s2/favicons?sz=32&domain=${encodeURIComponent(item.link)}" alt="Website Favicon" class="favicon">
+                    </a>
                     <h3>${item.title}</h3>
                     <p>${item.snippet}</p>
                     <a href="${item.link}" target="_blank">Read More</a>
